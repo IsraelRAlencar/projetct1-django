@@ -1,9 +1,15 @@
 <div class="recipe recipe-list-item">
     <div class="recipe-cover">
-        <img src="https://fakeimg.pl/1280x720/269fe6/269fe6" alt="temporario">
+        <a href="{% url "recipes:recipe" recipe.id %}">
+            <img src="{{ recipe.cover.url }}" alt="temporario">
+        </a>
     </div>
     <div class="recipe-title-container">
-        <h2 class="recipe-title">{{recipe.title}}</h2>
+        <h2 class="recipe-title">
+            <a href="{% url "recipes:recipe" recipe.id %}">
+                {{recipe.title}}
+            </a>
+        </h2>
     </div>
 
     <div class="recipe-author">
@@ -42,10 +48,18 @@
         </div>
     </div>
 
-    <footer class="recipe-footer">
-        <a href="/recipes/3/" class="recipe-read-more button button-dark button-full-width">
-            <i class="fas fa-eye"></i>
-            <span>Ver mais...</span>
-        </a>
-    </footer>
+    {% if is_detail_page is not True %}
+        <footer class="recipe-footer">
+            <a href="{% url "recipes:recipe" recipe.id %}" class="recipe-read-more button button-dark button-full-width">
+                <i class="fas fa-eye"></i>
+                <span>Ver mais...</span>
+            </a>
+        </footer>
+    {% endif %}
+
+    {% if is_detail_page is True %}
+        <div class="preparation-steps">
+            {{ recipe.preparation_steps|linebreaksbr }}
+        </div>
+    {% endif %}
 </div>
