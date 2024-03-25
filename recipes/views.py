@@ -5,3 +5,9 @@ def home(request):
     return render(request, 'recipes/pages/home.html', {
         'name': 'Israel Alencar',
     })
+
+
+def recipe(request, id):
+    return render(request, 'recipes/pages/home.html', {
+        'name': 'Israel Alencar',
+    })
