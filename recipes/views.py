@@ -22,7 +22,7 @@ def category(request, category_id):
 
     return render(request, 'recipes/pages/category.html', {
         'recipes': recipes,
-        'title': f'{recipes.first().category.name} | '
+        'title': f'{recipes[0].category.name} | '
     })
 
 
