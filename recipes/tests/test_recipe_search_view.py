@@ -49,3 +49,16 @@ class RecipeSearchViewsTests(RecipeTestBase):
 
         self.assertIn(recipe1, response_both.context['recipes'])
         self.assertIn(recipe2, response_both.context['recipes'])
+
+    def test_recipe_search_template_shows_correct_number_recipes(self):
+        for i in range(1, 21):
+            self.make_recipe(
+                title=f'Test recipe {i}',
+                slug=f'test-{i}',
+                author_data={'username': f'user_{i}'}
+            )
+
+        search_url = reverse('recipes:search')
+        response = self.client.get(f'{search_url}?q=Test')
+        response_context_recipe = response.context['recipes']
+        self.assertEqual(len(response_context_recipe), 9)
