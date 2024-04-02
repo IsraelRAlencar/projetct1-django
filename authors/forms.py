@@ -33,13 +33,12 @@ class RegisterForm(forms.ModelForm):
         add_placeholder(self.fields['email'], 'E-mail')
         add_placeholder(self.fields['first_name'], 'Name')
         add_placeholder(self.fields['last_name'], 'Last Name')
-        add_attr(self.fields['username'], 'css', 'a-css-class')
+        add_placeholder(self.fields['password'], 'Password')
+        add_placeholder(self.fields['confirm_password'], 'Confirm your Password') # noqa E501
 
     password = forms.CharField(
         required=True,
-        widget=forms.PasswordInput(attrs={
-            'placeholder': 'Password'
-        }),
+        widget=forms.PasswordInput(),
         error_messages={
             'required': 'Password must not be empty'
         },
@@ -53,9 +52,7 @@ class RegisterForm(forms.ModelForm):
     confirm_password = forms.CharField(
         required=True,
         label='Confirm Password',
-        widget=forms.PasswordInput(attrs={
-            'placeholder': 'Confirm your Password',
-        })
+        widget=forms.PasswordInput()
     )
 
     class Meta:
@@ -82,15 +79,6 @@ class RegisterForm(forms.ModelForm):
             'username': {
                 'required': 'This field must not be empty',
             }
-        }
-        widgets = {
-            'first_name': forms.TextInput(attrs={
-                'placeholder': 'Name',
-                'class': 'input text-input'
-            }),
-            'password': forms.PasswordInput(attrs={
-                'placeholder': 'Type your password here'
-            })
         }
 
     def clean(self):
