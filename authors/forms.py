@@ -45,7 +45,8 @@ class RegisterForm(forms.ModelForm):
         help_text=(
             'Password must have at least one uppercase letter,  one lowercase letter and one number. The length should be at least 8 characters.' # noqa E501
         ),
-        validators=[strong_password]
+        validators=[strong_password],
+        label='Password'
     )
     confirm_password = forms.CharField(
         required=True,
@@ -66,9 +67,8 @@ class RegisterForm(forms.ModelForm):
         labels = {
             'username': 'Username',
             'first_name': 'Name',
-            'last_name': 'Last name',
+            'last_name': 'Last Name',
             'email': 'E-mail',
-            'password': 'Password',
         }
         help_texts = {
             'email': 'The e-mail must be valid.',
