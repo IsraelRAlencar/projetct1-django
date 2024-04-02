@@ -43,9 +43,7 @@ class RegisterForm(forms.ModelForm):
             'required': 'Password must not be empty'
         },
         help_text=(
-            'Password must have at least one uppercase letter, '
-            'one lowercase letter and one number. The length should be '
-            'at least 8 characters.'
+            'Password must have at least one uppercase letter,  one lowercase letter and one number. The length should be at least 8 characters.' # noqa E501
         ),
         validators=[strong_password]
     )
