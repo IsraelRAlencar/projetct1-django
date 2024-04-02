@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from authors.forms import RegisterForm
 from django.http import Http404
+from django.contrib import messages
 
 
 def register_view(request):
@@ -17,6 +18,12 @@ def register_create(request):
 
     POST = request.POST
     request.session['register_form_data'] = POST
-    RegisterForm(request.POST)
+    form = RegisterForm(request.POST)
+
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'User created successfully!')
+
+        del (request.session['register_form_data'])
 
     return redirect('authors:register')
