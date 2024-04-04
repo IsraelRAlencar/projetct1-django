@@ -355,6 +355,19 @@ h6 {
     border-radius: 0.4rem;
 }
 
+.inline-form{
+    display: inline;
+}
+
+.plaintext-button{
+    font-size: 1.6rem;
+    display: inline;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--color-primary);
+}
+
 /* Messages */
 
 .messages-container{
