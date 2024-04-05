@@ -19,6 +19,9 @@ class RecipeMixin:
             email=email,
         )
 
+    def create_category(self, name='Category'):
+        return Category.objects.create(name='Category')
+
     def make_recipe(
         self,
         category_data=None,
@@ -59,7 +62,11 @@ class RecipeMixin:
         recipes = []
 
         for i in range(qtd):
-            kwargs = {'slug': f'r{i}', 'author_data': {'username': f'user{i}'}}
+            kwargs = {
+                'title': f'Recipe Title {i}',
+                'slug': f'r{i}',
+                'author_data': {'username': f'user{i}'}
+            }
             recipe = self.make_recipe(**kwargs)
             recipes.append(recipe)
 
@@ -69,6 +76,3 @@ class RecipeMixin:
 class RecipeTestBase(TestCase, RecipeMixin):
     def setUp(self) -> None:
         return super().setUp()
-
-    def create_category(self, name='Category'):
-        return Category.objects.create(name='Category')
