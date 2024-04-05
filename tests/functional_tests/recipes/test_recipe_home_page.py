@@ -2,7 +2,7 @@
 from unittest.mock import patch
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from tests.functional_tests.recipes.base import RecipeBaseFunctionalTest
+from tests.functional_tests.recipes.base_recipes import RecipeBaseFunctionalTest # noqa
 import pytest
 
 
