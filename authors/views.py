@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from django.http import Http404
 from django.contrib import messages
 from django.urls import reverse
+from slugify import slugify
 
 from authors.forms.recipe_form import AuthorRecipeForm
 from .forms import RegisterForm, LoginForm
@@ -150,11 +151,12 @@ def dashboard_recipe_create(request):
         recipe.author = request.user
         recipe.preparation_steps_is_html = False
         recipe.is_published = False
+        recipe.slug = slugify(recipe.title)
 
         recipe.save()
 
         messages.success(request, 'Recipe was created successfully!')
-        return redirect(reverse('authors:dashboard_recipe_edit', args=(id,)))
+        return redirect(reverse('authors:dashboard_recipe_edit', args=(recipe.pk,))) # noqa E501
 
     return render(
         request,

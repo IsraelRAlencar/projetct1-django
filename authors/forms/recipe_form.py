@@ -67,7 +67,7 @@ class AuthorRecipeForm(forms.ModelForm):
     def clean_preparation_time(self):
         preparation_time = self.cleaned_data.get('preparation_time')
 
-        if is_positive_number(preparation_time):
+        if not is_positive_number(preparation_time):
             self._my_errors['preparation_time'].append('Preparation time cannot be negative') # noqa E501
 
         return preparation_time
