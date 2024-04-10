@@ -265,7 +265,6 @@ img {
     background-color: var(--color-primary-dark);
     color: var(--color-white);
     padding: var(--spacing-gutter-large);
-    position: fixed;
     bottom: 0;
     width: 100%;
 }
