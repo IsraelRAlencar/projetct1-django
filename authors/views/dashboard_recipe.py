@@ -8,10 +8,10 @@ from django.contrib import messages
 
 
 class DashboardRecipe(View):
-    def get_recipe(self, id):
+    def get_recipe(self, id=None):
         recipe = None
 
-        if id:
+        if id is not None:
             recipe = Recipe.objects.filter(
                 author=self.request.user,
                 is_published=False,
@@ -32,14 +32,14 @@ class DashboardRecipe(View):
             }
         )
 
-    def get(self, request, id):
+    def get(self, request, id=None):
         recipe = self.get_recipe(id)
 
         form = AuthorRecipeForm(instance=recipe)
 
         return self.render_recipe(form)
 
-    def post(self, request, id):
+    def post(self, request, id=None):
         recipe = self.get_recipe(id)
 
         form = AuthorRecipeForm(
@@ -58,6 +58,10 @@ class DashboardRecipe(View):
             recipe.save()
 
             messages.success(request, 'Recipe was saved successfully!')
-            return redirect(reverse('authors:dashboard_recipe_edit', args=(id,))) # noqa E501
+            return redirect(reverse('authors:dashboard_recipe_edit', args=(
+                    recipe.id,
+                )
+              )
+            )
 
         return self.render_recipe(form)

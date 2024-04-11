@@ -2,8 +2,6 @@ from django.shortcuts import redirect, render
 from django.http import Http404
 from django.contrib import messages
 from django.urls import reverse
-
-from authors.forms.recipe_form import AuthorRecipeForm
 from authors.forms import RegisterForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -96,73 +94,6 @@ def dashboard(request):
         request,
         'authors/pages/dashboard.html',
         context={'recipes': recipes}
-    )
-
-
-@login_required(login_url='authors:login', redirect_field_name='next')
-def dashboard_recipe_edit(request, id):
-    recipe = Recipe.objects.filter(
-        author=request.user,
-        is_published=False,
-        pk=id,
-    ).order_by('-id').first()
-
-    if not recipe:
-        raise Http404()
-
-    form = AuthorRecipeForm(
-        data=request.POST or None,
-        files=request.FILES or None,
-        instance=recipe
-    )
-
-    if form.is_valid():
-        recipe = form.save(commit=False)
-
-        recipe.author = request.user
-        recipe.preparation_steps_is_html = False
-        recipe.is_published = False
-
-        recipe.save()
-
-        messages.success(request, 'Recipe was saved successfully!')
-        return redirect(reverse('authors:dashboard_recipe_edit', args=(id,)))
-
-    return render(
-        request,
-        'authors/pages/dashboard_recipe.html',
-        context={
-            'form': form
-        }
-    )
-
-
-@login_required(login_url='authors:login', redirect_field_name='next')
-def dashboard_recipe_create(request):
-    form = AuthorRecipeForm(
-        data=request.POST or None,
-        files=request.POST or None,
-    )
-
-    if form.is_valid():
-        recipe: Recipe = form.save(commit=False)
-
-        recipe.author = request.user
-        recipe.preparation_steps_is_html = False
-        recipe.is_published = False
-
-        recipe.save()
-
-        messages.success(request, 'Recipe was created successfully!')
-        return redirect(reverse('authors:dashboard_recipe_edit', args=(recipe.pk,))) # noqa E501
-
-    return render(
-        request,
-        'authors/pages/dashboard_recipe.html',
-        context={
-            'form': form,
-            'form_action': reverse('authors:dashboard_recipe_create')
-        }
     )
 
 
