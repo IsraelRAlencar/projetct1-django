@@ -11,7 +11,11 @@
 <body>
     {% include "global/partials/header.html" %}
 
-    {% include "global/partials/search.html" %}
+    {% if "authors/" not in request.path %}
+        {% include "global/partials/search.html" %}
+    {% else %}
+        <div class="m-y"></div>
+    {% endif %}
 
     <main class="main-content-container">
         {% block content %}{% endblock content %}
