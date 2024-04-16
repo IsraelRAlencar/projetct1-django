@@ -29,6 +29,11 @@ DEBUG = True if os.environ.get('DEBUG') == '1' else False
 
 ALLOWED_HOSTS: list[str] = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://cursodjango.israelralencar.com.br",
+    "https://cursodjango.israelralencar.com.br",
+]
+
 
 # Application definition
 
