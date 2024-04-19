@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from .models import Recipe
 from django.db.models import Q
@@ -10,6 +11,20 @@ from django.forms.models import model_to_dict
 
 
 PER_PAGE = int(os.environ.get('PER_PAGE', 6))
+
+
+def theory(request, *args, **kwargs):
+    recipes = Recipe.objects.get_published()
+
+    context = {
+        'recipes': recipes,
+    }
+
+    return render(
+        request,
+        'recipes/pages/theory.html',
+        context=context,
+    )
 
 
 class RecipeListViewBase(ListView):
