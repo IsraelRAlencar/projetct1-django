@@ -44,7 +44,7 @@
 })();
 
 (() => {
-    const authorsLogoutLinks = document.querySelectorAll('.author-logout-link');
+    const authorsLogoutLinks = document.querySelectorAll('.authors-logout-link');
     const formLogout = document.querySelector('.form-logout');
 
     for (const link of authorsLogoutLinks) {
@@ -52,6 +52,6 @@
             e.preventDefault();
 
             formLogout.submit();
-        })
+        });
     }
 })();
