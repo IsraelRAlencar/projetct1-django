@@ -531,7 +531,7 @@ a:hover {
     padding: 1rem;
     visibility: hidden;
     opacity: 1;
-    transition: all 300ms ease-in-out;
+    /* transition: all 300ms ease-in-out; */
     border-radius: 0 4px 4px 0;
     cursor: pointer;
 }
