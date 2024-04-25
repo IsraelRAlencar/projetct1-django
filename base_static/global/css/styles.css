@@ -105,6 +105,11 @@ a:hover {
     margin: 0 auto;
 }
 
+.main-header a:hover {
+    color: var(--color-primary);
+
+}
+
 .main-logo-icon {
     margin-right: 2rem;
 
@@ -513,7 +518,7 @@ a:hover {
 .profile-cover img {
     width: 300px;
     height: auto;
-    border-radius: 2rem;
+    border-radius: 20%;
 }
 
 .menu-container {
