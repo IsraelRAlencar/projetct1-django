@@ -13,5 +13,7 @@ urlpatterns = [
     path('dashboard/recipe/create/', views.DashboardRecipe.as_view(), name='dashboard_recipe_create'), # noqa E501
     path('dashboard/recipe/delete/', views.DashboardRecipeDelete.as_view(), name='dashboard_recipe_delete'), # noqa E501
     path('dashboard/recipe/<int:id>/edit/', views.DashboardRecipe.as_view(), name='dashboard_recipe_edit'), # noqa E501
-    path('profile/<int:id>', views.ProfileView.as_view(), name='profile'), # noqa E501
+    path('profile/<int:id>', views.ProfileView.as_view(), name='profile'),
+    path('profile/', views.profile_view, name='profile_view'),
+    path('profile/create/', views.profile_create, name='profile_create'), # noqa E501
 ]
