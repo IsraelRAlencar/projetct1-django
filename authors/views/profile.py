@@ -1,11 +1,11 @@
-from django.http import Http404
 from django.urls import reverse
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 from django.shortcuts import redirect, render
 from authors.models import Profile
 from django.contrib.auth.decorators import login_required
 from authors.forms import ProfileForm
 from django.contrib import messages
+from django.utils.decorators import method_decorator
 
 
 class ProfileView(TemplateView):
@@ -19,7 +19,7 @@ class ProfileView(TemplateView):
         ).select_related('author').first()
 
         if not profile:
-            return redirect(reverse('authors:profile_view'))
+            return redirect(reverse('authors:profile_create'))
 
         return self.render_to_response({
             **context,
@@ -27,40 +27,60 @@ class ProfileView(TemplateView):
         })
 
 
-@login_required(login_url='authors:login', redirect_field_name='next')
-def profile_view(request):
-    profile = Profile.objects.filter(author=request.user).first()
+@method_decorator(
+    login_required(login_url='authors:login', redirect_field_name='next'),
+    name='dispatch'
+)
+class ProfileChangeView(View):
+    def get_profile(self, id=None):
+        profile = Profile.objects.filter(
+            pk=id
+        ).first()
 
-    if profile:
-        return redirect(reverse('authors:dashboard'))
+        if not profile:
+            profile = None
 
-    profile_form_data = request.session.get('profile_form_data', None)
-    form = ProfileForm(profile_form_data)
-    return render(request, 'authors/pages/profile_create.html', {
-        'form': form,
-        'form_action': reverse("authors:profile_create")
-    })
+        return profile
 
+    def render_profile(self, form):
+        return render(
+            self.request,
+            'authors/pages/profile_create.html',
+            context={
+                'form': form,
+            }
+        )
 
-@login_required(login_url='authors:login', redirect_field_name='next')
-def profile_create(request):
-    if not request.POST:
-        raise Http404()
+    def get(self, request, id=None):
+        profile = self.get_profile(id)
 
-    POST = request.POST
-    request.session['profile_form_data'] = POST
-    form = ProfileForm(request.POST)
+        form = ProfileForm(instance=profile)
 
-    if form.is_valid():
-        profile = form.save(commit=False)
-        profile.author = request.user
-        profile.pk = request.user.pk
-        profile.profile_cover = request.FILES.get('profile_cover', None)
+        return self.render_profile(form)
 
-        profile.save()
-        messages.success(request, 'Profile created successfully!')
+    def post(self, request, id=None):
+        profile = self.get_profile(id)
 
-        del (request.session['profile_form_data'])
-        return redirect(reverse('authors:profile', kwargs={'id': request.user.pk})) # noqa E501
+        form = ProfileForm(
+            data=request.POST or None,
+            files=request.FILES or None,
+            instance=profile
+        )
 
-    return redirect(reverse('authors:profile_view'))
+        if form.is_valid():
+            profile = form.save(commit=False)
+
+            profile.author = request.user
+            profile.pk = request.user.pk
+            if request.FILES.get('profile_cover'):
+                profile.profile_cover = request.FILES.get('profile_cover')
+
+            profile.save()
+            messages.success(request, 'Profile created/edited successfully!')
+            return redirect(reverse('authors:profile_edit', args=(
+                        profile.id,
+                )
+              )
+            ) # noqa E501
+
+        return self.render_profile(form)
