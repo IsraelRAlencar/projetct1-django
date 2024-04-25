@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from authors.forms import ProfileForm
 from django.contrib import messages
 from django.utils.decorators import method_decorator
+from django.contrib.auth.models import User
 
 
 class ProfileView(TemplateView):
@@ -54,7 +55,15 @@ class ProfileChangeView(View):
     def get(self, request, id=None):
         profile = self.get_profile()
 
-        form = ProfileForm(instance=profile)
+        form = ProfileForm(
+            instance=profile,
+            initial={
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name,
+                'username': request.user.username,
+                'email': request.user.email
+            }
+        )
 
         return self.render_profile(form)
 
@@ -75,12 +84,43 @@ class ProfileChangeView(View):
             if request.FILES.get('profile_cover'):
                 profile.profile_cover = request.FILES.get('profile_cover')
 
+            alt_username_password = alter_user_settings(self, form.cleaned_data) # noqa E501
+
             profile.save()
-            messages.success(request, 'Profile created/edited successfully!')
-            return redirect(reverse('authors:profile_edit', args=(
-                        profile.id,
+            messages.success(request, 'Profile created/updated successfully!')
+
+            if alt_username_password:
+                return redirect(reverse('authors:logout'))
+            else:
+                return redirect(reverse('authors:profile_edit', args=(
+                            profile.id,
+                        )
+                    )
                 )
-              )
-            ) # noqa E501
 
         return self.render_profile(form)
+
+
+def alter_user_settings(self, dict):
+    user = User.objects.get(pk=self.request.user.pk)
+    altered_username_password = False
+
+    if dict.get('first_name') != user.first_name:
+        user.first_name = dict.get('first_name')
+
+    if dict.get('last_name') != user.last_name:
+        user.last_name = dict.get('last_name')
+
+    if dict.get('username') != user.username:
+        user.username = dict.get('username')
+        altered_username_password = True
+
+    if dict.get('email') != user.email:
+        user.email = dict.get('email')
+
+    if dict.get('password'):
+        user.set_password(dict.get('password'))
+        altered_username_password = True
+
+    user.save()
+    return altered_username_password

@@ -54,6 +54,7 @@ class RegisterForm(forms.ModelForm):
             'required': 'Repeat your password'
         },
     )
+
     email = forms.EmailField(
         error_messages={'required': 'E-mail is required'},
         label='E-mail',
