@@ -3,7 +3,13 @@
 
 {% block content %}
     <div class="main-content center container">
-        <h2>{{ profile.author.username }}</h2>
+        <h2>
+            {% if profile.author.get_full_name %}
+                {{ profile.author.get_full_name }}
+            {% else %}
+                {{ profile.author.username }}
+            {% endif %}
+        </h2>
         <p>{{ profile.bio }}</p>
     </div>
 {% endblock content %}

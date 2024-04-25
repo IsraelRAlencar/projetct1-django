@@ -46,7 +46,7 @@ class Recipe(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True
     )
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, blank=True, default=None)
 
     def __str__(self) -> str:
         return self.title
@@ -64,7 +64,7 @@ class Recipe(models.Model):
         error_messages = defaultdict(list)
 
         recipe_from_db = Recipe.objects.filter(
-            title_iexact=self.title
+            title__iexact=self.title
         ).first()
 
         if recipe_from_db:
