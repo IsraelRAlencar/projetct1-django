@@ -32,9 +32,9 @@ class ProfileView(TemplateView):
     name='dispatch'
 )
 class ProfileChangeView(View):
-    def get_profile(self, id=None):
+    def get_profile(self):
         profile = Profile.objects.filter(
-            pk=id
+            pk=self.request.user.pk
         ).first()
 
         if not profile:
@@ -52,14 +52,14 @@ class ProfileChangeView(View):
         )
 
     def get(self, request, id=None):
-        profile = self.get_profile(id)
+        profile = self.get_profile()
 
         form = ProfileForm(instance=profile)
 
         return self.render_profile(form)
 
     def post(self, request, id=None):
-        profile = self.get_profile(id)
+        profile = self.get_profile()
 
         form = ProfileForm(
             data=request.POST or None,
