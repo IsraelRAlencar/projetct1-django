@@ -10,6 +10,11 @@
                 {{ profile.author.username }}
             {% endif %}
         </h2>
+
+        <div class="profile-cover m-y">
+            <img src="{{ profile.profile_cover.url }}" alt="{{ profile.author.username }}">
+        </div>
+
         <p>{{ profile.bio }}</p>
     </div>
 {% endblock content %}

@@ -498,6 +498,12 @@ a:hover {
     display: none;
 }
 
+.profile-cover img {
+    width: 300px;
+    height: auto;
+    border-radius: 2rem;
+}
+
 .menu-container {
     position: fixed;
     top: 0;
