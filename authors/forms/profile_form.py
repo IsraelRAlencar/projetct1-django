@@ -97,9 +97,10 @@ class ProfileForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get('email')
 
-        exists = User.objects.filter(email=email).first()
+        email_user = User.objects.filter(email=email)
+        user = User.objects.filter(username=self.cleaned_data.get('username')).first() # noqa E501
 
-        if exists.pk != self.instance.author.id:
+        if email_user == user.email:
             raise ValidationError(
                 'User e-mail is already registered.', code='invalid'
             )
