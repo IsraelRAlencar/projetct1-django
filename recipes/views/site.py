@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
 from tag.models import Tag
-from .models import Recipe
+from ..models import Recipe
 from django.db.models import Q
 from utils.pagination import make_pagination
 from django.http import JsonResponse

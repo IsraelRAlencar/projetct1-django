@@ -53,7 +53,7 @@ class RecipeHomeViewsTests(RecipeTestBase):
         response_context_recipe = response.context['recipes']
         self.assertEqual(len(response_context_recipe), 9)
 
-    @patch('recipes.views.PER_PAGE', new=3)
+    @patch('recipes.views.site.PER_PAGE', new=3)
     def test_recipe_home_is_paginated(self):
         self.make_recipe_in_batch(qtd=8)
 
@@ -66,7 +66,7 @@ class RecipeHomeViewsTests(RecipeTestBase):
         self.assertEqual(len(paginator.get_page(2)), 3)
         self.assertEqual(len(paginator.get_page(3)), 2)
 
-    @patch('recipes.views.PER_PAGE', new=3)
+    @patch('recipes.views.site.PER_PAGE', new=3)
     def test_invalid_page_query_uses_page_one(self):
         self.make_recipe_in_batch(qtd=8)
 
