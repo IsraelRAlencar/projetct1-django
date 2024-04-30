@@ -7,13 +7,13 @@ from utils.delete_media_files import delete_file
 
 @receiver(pre_delete, sender=Recipe)
 def recipe_cover_delete(sender, instance, *args, **kwargs):
-    old_instance = Recipe.objects.get(pk=instance.pk)
+    old_instance = Recipe.objects.filter(pk=instance.pk)
     delete_file(old_instance)
 
 
 @receiver(pre_save, sender=Recipe)
 def recipe_cover_update(sender, instance, *args, **kwargs):
-    old_instance = Recipe.objects.get(pk=instance.pk)
+    old_instance = Recipe.objects.filter(pk=instance.pk)
 
     if old_instance.cover != instance.cover:
         delete_file(old_instance)
