@@ -6,6 +6,9 @@ from django.urls import reverse
 from django.utils.text import slugify
 from tag.models import Tag
 from django.utils.translation import gettext_lazy as _
+import os
+from django.conf import settings
+from PIL import Image
 
 
 class Category(models.Model):
@@ -59,11 +62,34 @@ class Recipe(models.Model):
     def get_absolute_url(self):
         return reverse('recipes:recipe', args=(self.id,))
 
+    def resize_image(image, new_width=800):
+        image_full_path = os.path.join(settings.MEDIA_ROOT, image.name)
+        image_pillow = Image.open(image_full_path)
+        original_width, original_height = image_pillow.size
+
+        if original_width <= new_width:
+            image_pillow.close()
+            return
+
+        new_height = round((new_width * original_height) / original_width)
+
+        new_image = image_pillow.resize((new_width, new_height), Image.LANCZOS)
+
+        new_image.save(image_full_path, optimize=True, quality=60)
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = f'{slugify(self.title)}'
 
-        return super().save(*args, **kwargs)
+        saved = super().save(*args, **kwargs)
+
+        if self.cover:
+            try:
+                self.resize_image(self.cover, 840)
+            except (FileNotFoundError):
+                ...
+
+        return saved
 
     def clean(self, *args, **kwargs):
         error_messages = defaultdict(list)
