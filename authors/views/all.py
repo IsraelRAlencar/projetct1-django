@@ -78,6 +78,10 @@ def logout_view(request):
             messages.error(request, 'Invalid logout user!')
             return redirect(reverse('authors:login'))
     else:
+        if not request.META.get('HTTP_REFERER'):
+            messages.error(request, 'Invalid logout request!')
+            return redirect(reverse('authors:login'))
+
         if request.META['HTTP_REFERER'] != request.build_absolute_uri(reverse('authors:profile_edit', args=(request.user.pk,))): # noqa E501
             messages.error(request, 'Invalid logout request!')
             return redirect(reverse('authors:login'))
