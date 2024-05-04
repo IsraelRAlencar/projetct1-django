@@ -62,6 +62,7 @@ class Recipe(models.Model):
     def get_absolute_url(self):
         return reverse('recipes:recipe', args=(self.id,))
 
+    @staticmethod
     def resize_image(image, new_width=800):
         image_full_path = os.path.join(settings.MEDIA_ROOT, image.name)
         image_pillow = Image.open(image_full_path)
@@ -86,7 +87,7 @@ class Recipe(models.Model):
         if self.cover:
             try:
                 self.resize_image(self.cover, 840)
-            except (FileNotFoundError):
+            except FileNotFoundError:
                 ...
 
         return saved
