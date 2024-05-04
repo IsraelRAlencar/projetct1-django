@@ -24,7 +24,7 @@ class Category(models.Model):
 
 class RecipeManager(models.Manager):
     def get_published(self):
-        return self.filter(is_published=True)
+        return self.filter(is_published=True).order_by('-id').select_related('author', 'category').prefetch_related('tags') # noqa E501
 
 
 class Recipe(models.Model):
