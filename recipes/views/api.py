@@ -17,8 +17,9 @@ def recipe_api_list(request):
     elif request.method == 'POST':
         serializer = RecipeSerializer(data=request.data) # noqa E501
         serializer.is_valid(raise_exception=True)
-        # serializer.save()
-        return Response(serializer.validated_data, status=status.HTTP_201_CREATED) # noqa E501
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED) # noqa E501
 
 
 @api_view()

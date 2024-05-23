@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from tag.models import Tag
 from .models import Recipe
+from authors.validators import AuthorRecipeValidator
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -12,7 +13,13 @@ class TagSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
-        fields = ['id', 'title', 'description', 'author', 'category', 'tags', 'public', 'preparation', 'tag_objects', 'tag_links'] # noqa E501
+        fields = [
+                    'id', 'title', 'description', 'author', 'category',
+                    'tags', 'public', 'preparation', 'tag_objects',
+                    'tag_links', 'preparation_time',
+                    'preparation_time_unit', 'servings',
+                    'servings_unit', 'preparation_steps', 'cover'
+                 ] # noqa E501
 
     public = serializers.BooleanField(source='is_published', read_only=True)
     preparation = serializers.SerializerMethodField(read_only=True)
@@ -32,21 +39,6 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         super_validate = super().validate(attrs)
-
-        title = attrs.get('title')
-        description = attrs.get('description')
-
-        if title == description:
-            raise serializers.ValidationError(
-                {
-                    "title": []
-                }
-            )
+        AuthorRecipeValidator(data=attrs, ErrorClass=serializers.ValidationError) # noqa E501
 
         return super_validate
-
-    def validade_title(self, value):
-        if len(value) < 5:
-            raise serializers.ValidationError('Title must have at least 5 characters.') # noqa E501
-
-        return value

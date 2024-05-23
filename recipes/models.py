@@ -1,4 +1,6 @@
 from collections import defaultdict
+from random import SystemRandom
+import string
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ValidationError
@@ -80,7 +82,13 @@ class Recipe(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = f'{slugify(self.title)}'
+            rand_letters = ''.join(
+                SystemRandom().choices(
+                    string.ascii_lowercase + string.digits,
+                    k=5,
+                )
+            )
+            self.slug = slugify(f'{self.title}-{rand_letters}')
 
         saved = super().save(*args, **kwargs)
 
