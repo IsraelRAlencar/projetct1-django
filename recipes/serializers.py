@@ -1,4 +1,3 @@
-from collections import defaultdict
 from rest_framework import serializers
 from tag.models import Tag
 from .models import Recipe
@@ -33,7 +32,6 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         super_validate = super().validate(attrs)
-        _my_errors = defaultdict(list)
 
         title = attrs.get('title')
         description = attrs.get('description')
