@@ -1,3 +1,4 @@
+from collections import defaultdict
 from rest_framework import serializers
 from tag.models import Tag
 from .models import Recipe
@@ -23,9 +24,31 @@ class RecipeSerializer(serializers.ModelSerializer):
     tag_links = serializers.HyperlinkedRelatedField(
         many=True,
         source='tags',
-        queryset=Tag.objects.all(),
         view_name='recipes:recipes_api_v2_tag',
+        read_only=True,
     )
 
     def get_preparation(self, recipe):
         return f"{recipe.preparation_time} {recipe.preparation_time_unit}"
+
+    def validate(self, attrs):
+        super_validate = super().validate(attrs)
+        _my_errors = defaultdict(list)
+
+        title = attrs.get('title')
+        description = attrs.get('description')
+
+        if title == description:
+            raise serializers.ValidationError(
+                {
+                    "title": []
+                }
+            )
+
+        return super_validate
+
+    def validade_title(self, value):
+        if len(value) < 5:
+            raise serializers.ValidationError('Title must have at least 5 characters.') # noqa E501
+
+        return value
