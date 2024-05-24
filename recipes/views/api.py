@@ -2,25 +2,34 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status # noqa F401
 from rest_framework.views import APIView
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.pagination import PageNumberPagination
 from django.shortcuts import get_object_or_404
 from ..models import Recipe
 from ..serializers import RecipeSerializer, TagSerializer
 from tag.models import Tag
 
 
-class RecipeAPIv2List(APIView):
-    def get(self, request):
-        recipes = Recipe.objects.get_published()[:10]
-        serializer = RecipeSerializer(recipes, many=True, context={'request': request}) # noqa E501
+class RecipeAPIv2Pagination(PageNumberPagination):
+    page_size = 10
 
-        return Response(serializer.data)
 
-    def post(self, request):
-        serializer = RecipeSerializer(data=request.data, context={'request': request}) # noqa E501
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+class RecipeAPIv2List(ListCreateAPIView):
+    queryset = Recipe.objects.get_published()
+    serializer_class = RecipeSerializer
+    pagination_class = RecipeAPIv2Pagination
+    # def get(self, request):
+    #     recipes = Recipe.objects.get_published()[:10]
+    #     serializer = RecipeSerializer(recipes, many=True, context={'request': request}) # noqa E501
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED) # noqa E501
+    #     return Response(serializer.data)
+
+    # def post(self, request):
+    #     serializer = RecipeSerializer(data=request.data, context={'request': request}) # noqa E501
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED) # noqa E501
 
 
 class RecipeAPIv2Detail(APIView):
