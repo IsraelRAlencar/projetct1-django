@@ -42,3 +42,12 @@ class RecipeSerializer(serializers.ModelSerializer):
         AuthorRecipeValidator(data=attrs, ErrorClass=serializers.ValidationError) # noqa E501
 
         return super_validate
+
+    def save(self, **kwargs):
+        return super().save(**kwargs)
+
+    def create(self, validated_data):
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)
