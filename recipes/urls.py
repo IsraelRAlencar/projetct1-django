@@ -2,6 +2,8 @@
 from django.urls import path
 from recipes import views
 from rest_framework.routers import SimpleRouter
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView # noqa E501
+
 
 app_name = 'recipes'
 
@@ -20,6 +22,9 @@ urlpatterns = [
     path('recipes/api/v1/<int:pk>/', views.RecipeDetailAPI.as_view(), name="api_v1_detail"), # noqa E501
     path('recipes/theory/', views.theory, name="theory"), # noqa E501
     path('recipes/api/v2/tag/<int:pk>/', views.tag_api_detail, name="recipes_api_v2_tag"), # noqa E501
+    path('recipes/api/token/verify/', TokenVerifyView.as_view(), name='token_verify'), # noqa E501
+    path('recipes/api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # noqa E501
+    path('recipes/api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # noqa E501
 ]
 
 urlpatterns += recipe_api_v2_router.urls
