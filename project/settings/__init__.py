@@ -10,5 +10,5 @@ from .i18n import *
 from .assets import *
 from .messages import *
 
+from .rest_framework import * # isort:skip
 from .debug_toolbar import * # isort:skip
-from rest_framework import * # isort:skip

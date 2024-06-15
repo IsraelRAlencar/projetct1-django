@@ -1,5 +1,5 @@
 
-from django.urls import path
+from django.urls import include, path
 from recipes import views
 from rest_framework.routers import SimpleRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView # noqa E501
@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 app_name = 'recipes'
 
 recipe_api_v2_router = SimpleRouter()
-recipe_api_v2_router.register('recipe/api/v2', views.RecipeAPIv2ViewSet, basename='recipe_api_v2') # noqa E501
+recipe_api_v2_router.register('recipes/api/v2', views.RecipeAPIv2ViewSet, basename='recipes-api') # noqa E501
 
 urlpatterns = [
     path('', views.RecipeListViewHome.as_view(), name="home"),
@@ -22,9 +22,8 @@ urlpatterns = [
     path('recipes/api/v1/<int:pk>/', views.RecipeDetailAPI.as_view(), name="api_v1_detail"), # noqa E501
     path('recipes/theory/', views.theory, name="theory"), # noqa E501
     path('recipes/api/v2/tag/<int:pk>/', views.tag_api_detail, name="recipes_api_v2_tag"), # noqa E501
-    path('recipes/api/token/verify/', TokenVerifyView.as_view(), name='token_verify'), # noqa E501
     path('recipes/api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # noqa E501
     path('recipes/api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # noqa E501
+    path('recipes/api/token/verify/', TokenVerifyView.as_view(), name='token_verify'), # noqa E501
+    path('', include(recipe_api_v2_router.urls)),
 ]
-
-urlpatterns += recipe_api_v2_router.urls
